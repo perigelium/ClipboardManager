@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
+using System.Text;
+using System.Diagnostics;
 
 namespace ClipboardManager
 {
@@ -24,14 +26,59 @@ namespace ClipboardManager
         int current_history_item = 0;
         
 
-        // Подключение библиотек WIN
+        // WINDOWS libraries import
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+        //[DllImport("user32.dll")]
+        //private static extern int GetWindowModuleFileName(int hWnd, StringBuilder title, int size);
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
+
+        private string GetActiveWindowExecutableName()
+        {
+            string app_path = "";
+            string app_name = "";
+            IntPtr handle = IntPtr.Zero;
+            uint processId;
+
+            handle = GetForegroundWindow();
+
+            if (handle == null)
+            {
+                return "";
+            }
+
+            if (GetWindowThreadProcessId(handle, out processId) > 0)
+            {
+                app_path = Process.GetProcessById((int)processId).MainModule.FileName;
+            }
+
+            if(app_path.Length > 0)
+            {
+                app_name = Path.GetFileNameWithoutExtension(app_path);
+            }
+            else
+            {
+                const int nChars = 256;
+                StringBuilder Buff = new StringBuilder(nChars);
+
+                if (GetWindowText(handle, Buff, nChars) > 0)
+                {
+                    app_name = Buff.ToString();
+                }
+            }
+
+            return app_name;
+        }
 
         public ClipboardManager()
         {
@@ -61,7 +108,7 @@ namespace ClipboardManager
 
             String string_name_ite;
             //int free_slot_to_tray = Properties.Settings.Default.history_size;
-            var list = ClipboardManager_History.OrderBy(x => x.Key);
+            var list = ClipboardManager_History.OrderByDescending(x => x.Key);
 
             foreach (var item in list)
             {               
@@ -94,6 +141,8 @@ namespace ClipboardManager
             current_history_item = ClipboardManager_Index_ListBox[list_clipboard.SelectedIndex];
             ClipboardManager_TARGET = ClipboardManager_History[current_history_item];
 
+            textBoxItemContent.Text = ClipboardManager_TARGET;
+
             if (Tags_Array.ContainsKey(current_history_item))
             {
                 textBoxTags.Text = Tags_Array[current_history_item];
@@ -109,7 +158,7 @@ namespace ClipboardManager
                 return;
             }
 
-            Clipboard.SetText(ClipboardManager_TARGET);
+            Clipboard.SetText(ClipboardManager_TARGET);            
 
             /*
             textBoxTags.Clear();
@@ -184,13 +233,13 @@ namespace ClipboardManager
 
         private void menu_item_click(object sender, EventArgs e)
         {
-            // Console.WriteLine((int)(sender as ToolStripMenuItem).Tag);
+            // //Console.WriteLine((int)(sender as ToolStripMenuItem).Tag);
             Clipboard.SetText(ClipboardManager_History[(int)(sender as ToolStripMenuItem).Tag]);
         }
 
         private void _notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            Console.WriteLine(WindowState);
+            //Console.WriteLine(WindowState);
             if (WindowState == FormWindowState.Normal || WindowState == FormWindowState.Maximized)
             {
                 // ShowInTaskbar = false;
@@ -219,14 +268,14 @@ namespace ClipboardManager
             //gkh.HookedKeys.Add(Keys.A);
              //gkh.KeyUp += new KeyEventHandler(gkh_KeyUp);
 
-            ClipboardManager_DAT = "history.dat";//Application.UserAppDataPath + 
-            Console.WriteLine("Файл истории: " + ClipboardManager_DAT);
+            ClipboardManager_DAT = Path.GetDirectoryName(Application.ExecutablePath) + "\\history.dat";//Application.UserAppDataPath + 
+            //Console.WriteLine("Файл истории: " + ClipboardManager_DAT);
 
             //history_size.Value = Properties.Settings.Default.history_size;
-            //Console.WriteLine("Размер истории загружен из настроек: " + Properties.Settings.Default.history_size);
+            ////Console.WriteLine("Размер истории загружен из настроек: " + Properties.Settings.Default.history_size);
 
             size_tray.Value = Properties.Settings.Default.size_tray;
-            Console.WriteLine("Количество элементов в трее загружено из настроек: " + Properties.Settings.Default.size_tray);
+            //Console.WriteLine("Количество элементов в трее загружено из настроек: " + Properties.Settings.Default.size_tray);
 
             check_autorun_state();
 
@@ -236,7 +285,7 @@ namespace ClipboardManager
 
             // save_history();
 
-            Console.WriteLine(ClipboardManager_History.Count());
+            //Console.WriteLine(ClipboardManager_History.Count());
 
             if (ClipboardManager_History.Count() == 0)
             {
@@ -256,7 +305,7 @@ namespace ClipboardManager
             if (reg.GetValue(ClipboardManager_Name) != null)
             {
                 autoload.Checked = true;
-                Console.WriteLine("Приложение записано в автозагрузку. (В настройках ставим Checked = true)");
+                //Console.WriteLine("Приложение записано в автозагрузку. (В настройках ставим Checked = true)");
             }
             reg.Close();
         }
@@ -264,8 +313,8 @@ namespace ClipboardManager
         private void load_buffer_history(string file_path)
         {
             String XMLString = "";
-
             XMLString += @"<items>";
+
             if (File.Exists(file_path))
             {
                 StreamReader stream = new StreamReader(file_path);
@@ -279,32 +328,39 @@ namespace ClipboardManager
                 XMLString += @"</items>";
                 int index_new_history = 2;
                 int index_tags = 2;
-                XDocument doc = XDocument.Parse(XMLString);
 
-                var items = doc.Element("items").Elements("item");
-
-                foreach (XElement item in items)
+                try
                 {
-                    var contents = item.Elements("content");
-                    
+                    XDocument doc = XDocument.Parse(XMLString);
 
-                    foreach (XElement content in contents)
+                    var items = doc.Element("items").Elements("item");
+
+                    foreach (XElement item in items)
                     {
-                        ClipboardManager_History.Add(index_new_history, content.Value);
-                        //string[] first_item = { "" };
+                        var contents = item.Elements("content");
 
-                        index_new_history++;
+                        foreach (XElement content in contents)
+                        {
+                            ClipboardManager_History.Add(index_new_history, content.Value);
+                            //string[] first_item = { "" };
+
+                            index_new_history++;
+                        }
+
+                        var tags = item.Elements("tags");
+
+                        foreach (XElement tag in tags)
+                        {
+                            //string[] first_item = { "" };
+                            Tags_Array.Add(index_tags, tag.Value);
+
+                            index_tags++;
+                        }
                     }
+                }
+                catch (System.Exception ex)
+                {
 
-                    var tags = item.Elements("tags");
-
-                    foreach (XElement tag in tags)
-                    {
-                        //string[] first_item = { "" };
-                        Tags_Array.Add(index_tags, tag.Value);
-
-                        index_tags++;
-                    }
                 }
             }
         }
@@ -330,8 +386,6 @@ namespace ClipboardManager
             }
         }
 
-        // Событие изменения статуса флажка автозагрузки
-        // Если флажок - прописываем в реестр на автозагрузку
         private void autoload_CheckedChanged(object sender, EventArgs e)
         {
             RegistryKey reg = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run\", true);
@@ -340,17 +394,17 @@ namespace ClipboardManager
                 try
                 {
                     reg.DeleteValue(ClipboardManager_Name);
-                    Console.WriteLine("Программа " + ClipboardManager_Name + " удалена из автозагрузки в реестре");
+                    //Console.WriteLine("Программа " + ClipboardManager_Name + " удалена из автозагрузки в реестре");
                 }
                 catch
                 {
-                    Console.WriteLine("Ошибка удаления " + ClipboardManager_Name + " из автозагрузки в реестре");
+                    //Console.WriteLine("Ошибка удаления " + ClipboardManager_Name + " из автозагрузки в реестре");
                 }
             }
             if(autoload.Checked)
             {
                 reg.SetValue(ClipboardManager_Name, Application.ExecutablePath);
-                Console.WriteLine("Программа " + ClipboardManager_Name + " записана в автозагрузку через реестр");
+                //Console.WriteLine("Программа " + ClipboardManager_Name + " записана в автозагрузку через реестр");
             }
             reg.Close();
         }
@@ -366,7 +420,7 @@ namespace ClipboardManager
         {
             Properties.Settings.Default.history_size = (int)history_size.Value;
             Properties.Settings.Default.Save();
-            Console.WriteLine("Размер истории изменен: " + Properties.Settings.Default.history_size);
+            //Console.WriteLine("Размер истории изменен: " + Properties.Settings.Default.history_size);
             list_clipboard_reload(); // Обновляем ListBox
         }
         */
@@ -375,7 +429,7 @@ namespace ClipboardManager
         {
             Properties.Settings.Default.size_tray = (int)size_tray.Value;
             Properties.Settings.Default.Save();
-            Console.WriteLine("Количество элементов в трее изменено: " + Properties.Settings.Default.size_tray);
+            //Console.WriteLine("Количество элементов в трее изменено: " + Properties.Settings.Default.size_tray);
             reload_tray(); // Обновляем Трей
         }
 
@@ -403,6 +457,14 @@ namespace ClipboardManager
             }
 
             string item_tags = retrieve_item_tags(ClipboardManager_TARGET);
+
+            // hardcode ! todo: include/exclude capture mode for any application
+            string item_tags_case_insensitive = item_tags.ToLower();
+
+            if (item_tags_case_insensitive.Contains("skype") || item_tags_case_insensitive.Contains("viber"))
+            {
+                return;
+            }
 
             if (string.IsNullOrEmpty(item_tags))
             {
@@ -447,13 +509,13 @@ namespace ClipboardManager
                 }
                 */
 
-                /*
+/*
                 // Записываем новый элемент в файл истории
                 StreamWriter writer = new StreamWriter(ClipboardManager_DAT, true, System.Text.Encoding.UTF8);
                 writer.WriteLine(@"<item>" + ClipboardManager_TARGET.Replace(@"<", @"&lt;").Replace(@">", @"&gt;") + @"</item>");
                 writer.Close();
-                Console.WriteLine("В историю добавлен новый элемент: " + ClipboardManager_TARGET);
-                 */             
+                //Console.WriteLine("В историю добавлен новый элемент: " + ClipboardManager_TARGET);
+*/             
         }
 
         private string retrieve_item_tags(string clip_content)
@@ -490,11 +552,11 @@ namespace ClipboardManager
             }
             else
             {
-                rx = new Regex("[0-9]{4,}");
+                rx = new Regex("#[A-Fa-f0-9]{6,}");
 
                 if (rx.IsMatch(clip_content))
                 {
-                    item_tags += " Digits,";
+                    item_tags += " Hex code,";
                 }
             }
 
@@ -527,12 +589,27 @@ namespace ClipboardManager
                 item_tags += " Path,";
             }
 
+            string source_app = "";
+
+            source_app = GetActiveWindowExecutableName();
+
+            if (!string.IsNullOrEmpty(source_app))
+            {
+                item_tags += " Source: ";
+                item_tags += source_app;
+                item_tags += ",";
+            }
+
             if (item_tags.Length != 0)
             {
                 int index = item_tags.LastIndexOf(',');
-                item_tags = item_tags.Remove(index);
+
+                if (index > 0)
+                {
+                    item_tags = item_tags.Remove(index);
+                }                
             }
-            
+           
             return item_tags;
         }
 
@@ -596,22 +673,22 @@ namespace ClipboardManager
             //WindowState = FormWindowState.Minimized;
         }
 
-        // дескриптор окна
+        // window descriptor
         private IntPtr nextClipboardViewer;
 
         public const int WM_DRAWCLIPBOARD = 0x308;
         public const int WM_CHANGECBCHAIN = 0x030D;
 
-        // реагирование на изменение в буфере обмена и т.д.
+        // clipboard changes reflection
         protected override void WndProc(ref Message m)
         {
-            // Console.WriteLine("WndProc");
+            // //Console.WriteLine("WndProc");
             switch (m.Msg)
             {
                 case WM_DRAWCLIPBOARD:
                     {
                         ClipboardChanged();
-                        //Console.WriteLine("WM_DRAWCLIPBOARD ClipboardChanged();");
+                        ////Console.WriteLine("WM_DRAWCLIPBOARD ClipboardChanged();");
                         SendMessage(nextClipboardViewer, WM_DRAWCLIPBOARD, m.WParam, m.LParam);
                         break;
                     }
@@ -738,6 +815,34 @@ namespace ClipboardManager
 
             list_clipboard_reload();
 
+        }
+
+        private void toolStripMenuSaveSelection_Click(object sender, EventArgs e)
+        {
+            if (list_clipboard.SelectedIndices.Count == 0)
+            {
+                return;
+            }
+
+            if (save_fd.ShowDialog() == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            try
+            {
+                StreamWriter writer = new StreamWriter(save_fd.FileName, false, System.Text.Encoding.UTF8);
+
+                foreach (int item in list_clipboard.SelectedIndices)
+                {
+                    writer.WriteLine(ClipboardManager_History[ClipboardManager_Index_ListBox[item]]);
+                }
+                writer.Close();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Save File Error", "Error");
+            }
         }
     }
 }

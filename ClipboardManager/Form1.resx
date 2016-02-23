@@ -129,7 +129,7 @@
     <value>12, 31</value>
   </data>
   <data name="list_clipboard.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 251</value>
+    <value>660, 213</value>
   </data>
   <data name="list_clipboard.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -144,13 +144,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;list_clipboard.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="autoload.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="autoload.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 358</value>
+    <value>13, 486</value>
   </data>
   <data name="autoload.Size" type="System.Drawing.Size, System.Drawing">
     <value>63, 17</value>
@@ -171,10 +171,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;autoload.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="size_tray.Location" type="System.Drawing.Point, System.Drawing">
-    <value>102, 374</value>
+    <value>103, 502</value>
   </data>
   <data name="size_tray.Size" type="System.Drawing.Size, System.Drawing">
     <value>115, 20</value>
@@ -192,13 +192,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;size_tray.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>99, 358</value>
+    <value>100, 486</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 13</value>
@@ -219,7 +219,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <metadata name="_notifyIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -1363,13 +1363,13 @@
     <value>Consolas, 14.25pt</value>
   </data>
   <data name="textBoxTags.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 295</value>
+    <value>12, 437</value>
   </data>
   <data name="textBoxTags.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="textBoxTags.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 51</value>
+    <value>660, 43</value>
   </data>
   <data name="textBoxTags.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -1384,43 +1384,52 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;textBoxTags.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>128, 17</value>
   </metadata>
   <data name="openToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>144, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="openToolStripMenuItem.Text" xml:space="preserve">
     <value>Open History</value>
   </data>
   <data name="saveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>144, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="saveToolStripMenuItem.Text" xml:space="preserve">
     <value>Save History</value>
   </data>
+  <data name="toolStripMenuSaveSelection.Size" type="System.Drawing.Size, System.Drawing">
+    <value>152, 22</value>
+  </data>
+  <data name="toolStripMenuSaveSelection.Text" xml:space="preserve">
+    <value>Save Selection</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>149, 6</value>
+  </data>
   <data name="reloadToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>144, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="reloadToolStripMenuItem.Text" xml:space="preserve">
     <value>Reload List</value>
   </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>141, 6</value>
+    <value>149, 6</value>
   </data>
   <data name="clearToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>144, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="clearToolStripMenuItem.Text" xml:space="preserve">
     <value>Clear List</value>
   </data>
   <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>141, 6</value>
+    <value>149, 6</value>
   </data>
   <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>144, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>Exit</value>
@@ -1453,7 +1462,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <metadata name="open_fd.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>243, 17</value>
@@ -1461,6 +1470,37 @@
   <metadata name="save_fd.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>339, 17</value>
   </metadata>
+  <data name="textBoxItemContent.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Consolas, 12pt</value>
+  </data>
+  <data name="textBoxItemContent.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 250</value>
+  </data>
+  <data name="textBoxItemContent.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="textBoxItemContent.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
+    <value>Vertical</value>
+  </data>
+  <data name="textBoxItemContent.Size" type="System.Drawing.Size, System.Drawing">
+    <value>659, 181</value>
+  </data>
+  <data name="textBoxItemContent.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;textBoxItemContent.Name" xml:space="preserve">
+    <value>textBoxItemContent</value>
+  </data>
+  <data name="&gt;&gt;textBoxItemContent.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBoxItemContent.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;textBoxItemContent.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -1471,7 +1511,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>684, 441</value>
+    <value>684, 541</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -2606,13 +2646,13 @@
 </value>
   </data>
   <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing">
-    <value>700, 480</value>
+    <value>700, 580</value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>700, 480</value>
+    <value>700, 580</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>ClipboardManager</value>
+    <value>Clipboard Manager</value>
   </data>
   <data name="&gt;&gt;_notifyIcon.Name" xml:space="preserve">
     <value>_notifyIcon</value>
@@ -2679,6 +2719,18 @@
   </data>
   <data name="&gt;&gt;save_fd.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripMenuSaveSelection.Name" xml:space="preserve">
+    <value>toolStripMenuSaveSelection</value>
+  </data>
+  <data name="&gt;&gt;toolStripMenuSaveSelection.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>ClipboardManager</value>

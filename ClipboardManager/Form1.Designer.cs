@@ -47,6 +47,9 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.open_fd = new System.Windows.Forms.OpenFileDialog();
             this.save_fd = new System.Windows.Forms.SaveFileDialog();
+            this.textBoxItemContent = new System.Windows.Forms.TextBox();
+            this.toolStripMenuSaveSelection = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.size_tray)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -115,6 +118,8 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
+            this.toolStripMenuSaveSelection,
+            this.toolStripSeparator2,
             this.reloadToolStripMenuItem,
             this.toolStripSeparator1,
             this.clearToolStripMenuItem,
@@ -163,10 +168,27 @@
             resources.ApplyResources(this.exitToolStripMenuItem, "exitToolStripMenuItem");
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // textBoxItemContent
+            // 
+            resources.ApplyResources(this.textBoxItemContent, "textBoxItemContent");
+            this.textBoxItemContent.Name = "textBoxItemContent";
+            // 
+            // toolStripMenuSaveSelection
+            // 
+            this.toolStripMenuSaveSelection.Name = "toolStripMenuSaveSelection";
+            resources.ApplyResources(this.toolStripMenuSaveSelection, "toolStripMenuSaveSelection");
+            this.toolStripMenuSaveSelection.Click += new System.EventHandler(this.toolStripMenuSaveSelection_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
+            // 
             // ClipboardManager
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.textBoxItemContent);
             this.Controls.Add(this.textBoxTags);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.size_tray);
@@ -202,6 +224,9 @@
         private System.Windows.Forms.OpenFileDialog open_fd;
         private System.Windows.Forms.SaveFileDialog save_fd;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.TextBox textBoxItemContent;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuSaveSelection;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
 

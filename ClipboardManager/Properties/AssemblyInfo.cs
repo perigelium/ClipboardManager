@@ -11,7 +11,7 @@ using System.Resources;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ClipboardManager")]
 [assembly: AssemblyProduct("ClipboardManager")]
-[assembly: AssemblyCopyright("Copyright © ClipboardManager 2014")]
+[assembly: AssemblyCopyright("Copyright © ClipboardManager 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,7 +21,7 @@ using System.Resources;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5a0e18b3-5ff4-4dee-8e3c-416915c5d1d0")]
+[assembly: Guid("2693791A-62B5-4A36-979E-0BECB1B426F9")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -35,4 +35,4 @@ using System.Resources;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: NeutralResourcesLanguageAttribute("ru")]
+[assembly: NeutralResourcesLanguageAttribute("en")]
