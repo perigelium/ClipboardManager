@@ -10,6 +10,8 @@ using System.Xml.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Diagnostics;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace ClipboardManager
 {
@@ -84,8 +86,7 @@ namespace ClipboardManager
         {
             InitializeComponent();
 
-            open_fd.Filter = "XML files|*.xml";
-            save_fd.Filter = "XML files|*.xml";
+            open_fd.Filter = "XML files|*.xml";                        
 
             load_configs();
 
@@ -112,13 +113,14 @@ namespace ClipboardManager
 
             foreach (var item in list)
             {               
-                if (item.Value.Length > 150)
-                {
-                    string_name_ite = item.Value.Replace("\n", "\t").Replace("\r", "\t").Substring(0, 100);
+                if (item.Value.Length > 75)
+                {                    
+                    string_name_ite = item.Value.Substring(0, 45) + " ... " + 
+                        item.Value.Substring(item.Value.Length - 30, 30); //.Replace("\n", "\t").Replace("\r", "\t").Substring(item.Value.Length - 30, 30);
                 }
                 else
                 {
-                    string_name_ite = item.Value.Replace("\n", "\t").Replace("\r", "\t");
+                    string_name_ite = item.Value;//.Replace("\n", "\t").Replace("\r", "\t");
                 }
 
                 list_clipboard.Items.Add(string_name_ite);
@@ -141,7 +143,7 @@ namespace ClipboardManager
             current_history_item = ClipboardManager_Index_ListBox[list_clipboard.SelectedIndex];
             ClipboardManager_TARGET = ClipboardManager_History[current_history_item];
 
-            textBoxItemContent.Text = ClipboardManager_TARGET;
+            textBoxItemContent.Lines = ClipboardManager_TARGET.Split('\n');
 
             if (Tags_Array.ContainsKey(current_history_item))
             {
@@ -194,9 +196,9 @@ namespace ClipboardManager
                 menuItem.Tag = item.Key;
                 if (item.Value.Length > 60)
                 {
-                    menuItem.Text = item.Value.Replace("\n", "\t").Replace("\r", "\t").Substring(0, 60);
+                    menuItem.Text = item.Value.Substring(0, 60);//.Replace("\n", "\t").Replace("\r", "\t")
                 } else {
-                    menuItem.Text = item.Value.Replace("\n", "\t").Replace("\r", "\t");
+                    menuItem.Text = item.Value;//.Replace("\n", "\t").Replace("\r", "\t");
                 }
                 
                 menuItem.Click += new System.EventHandler(menu_item_click);
@@ -268,7 +270,9 @@ namespace ClipboardManager
             //gkh.HookedKeys.Add(Keys.A);
              //gkh.KeyUp += new KeyEventHandler(gkh_KeyUp);
 
-            ClipboardManager_DAT = Path.GetDirectoryName(Application.ExecutablePath) + "\\history.dat";//Application.UserAppDataPath + 
+            string today = DateTime.Today.ToShortDateString();
+
+            ClipboardManager_DAT = Path.GetDirectoryName(Application.ExecutablePath) + "\\" + today + "_history.xml";//Application.UserAppDataPath + 
             //Console.WriteLine("Файл истории: " + ClipboardManager_DAT);
 
             //history_size.Value = Properties.Settings.Default.history_size;
@@ -313,7 +317,7 @@ namespace ClipboardManager
         private void load_buffer_history(string file_path)
         {
             String XMLString = "";
-            XMLString += @"<items>";
+            //XMLString += @"<xml>";
 
             if (File.Exists(file_path))
             {
@@ -325,15 +329,15 @@ namespace ClipboardManager
                 }
                 stream.Close();
 
-                XMLString += @"</items>";
-                int index_new_history = 2;
-                int index_tags = 2;
+                //XMLString += @"</xml>";
+                int index_new_history = 0;
+                int index_tags = 0;
 
                 try
                 {
                     XDocument doc = XDocument.Parse(XMLString);
 
-                    var items = doc.Element("items").Elements("item");
+                    var items = doc.Element("xml").Elements("item");
 
                     foreach (XElement item in items)
                     {
@@ -341,7 +345,7 @@ namespace ClipboardManager
 
                         foreach (XElement content in contents)
                         {
-                            ClipboardManager_History.Add(index_new_history, content.Value);
+                            ClipboardManager_History.Add(index_new_history, content.Value.Replace(@"&lt;", @"<" ).Replace(@"&gt;", @">" ));
                             //string[] first_item = { "" };
 
                             index_new_history++;
@@ -371,7 +375,7 @@ namespace ClipboardManager
             {
                 int clear_items_count = ClipboardManager_History.Count();// - Properties.Settings.Default.history_size;
                 var list = ClipboardManager_History.Keys.ToList();
-                list.Sort();
+                //list.Sort();
                 foreach (var key in list)
                 {
                     ClipboardManager_History.Remove(key);
@@ -435,10 +439,28 @@ namespace ClipboardManager
 
         private void ClipboardChanged()
         {
-            if (!Clipboard.ContainsText() || Clipboard.GetText().Length == 0
+            if (textBoxTags.Focused)
+            {
+                if (!Tags_Array.ContainsKey(current_history_item))
+                {
+                    Tags_Array.Add(current_history_item, textBoxTags.Text);
+                }
+                else
+                {
+                    Tags_Array[current_history_item] = textBoxTags.Text;
+                }
+            }
+
+            if (!Clipboard.ContainsText() || Clipboard.GetText().Length < 4
                 || ClipboardManager_TARGET == Clipboard.GetText() || Clipboard.GetText() == "")
             {
+                return;
+            }
 
+            string clip_source = get_clip_source();
+
+            if (clip_source.Contains(this.Name))
+            {
                 return;
             }
 
@@ -457,6 +479,9 @@ namespace ClipboardManager
             }
 
             string item_tags = retrieve_item_tags(ClipboardManager_TARGET);
+            item_tags += "\t";
+            item_tags += clip_source;
+
 
             // hardcode ! todo: include/exclude capture mode for any application
             string item_tags_case_insensitive = item_tags.ToLower();
@@ -530,12 +555,14 @@ namespace ClipboardManager
                 item_tags += " PhoneNumber,";
             }
 
+            /*
             rx = new Regex("[A-Z]{4,}");
 
             if (rx.IsMatch(clip_content))
             {
                 item_tags += " Caps,";
             }
+             */
 
             rx = new Regex("(\\w{1,19}\\W{1,9}){33,}");
 
@@ -589,17 +616,6 @@ namespace ClipboardManager
                 item_tags += " Path,";
             }
 
-            string source_app = "";
-
-            source_app = GetActiveWindowExecutableName();
-
-            if (!string.IsNullOrEmpty(source_app))
-            {
-                item_tags += " Source: ";
-                item_tags += source_app;
-                item_tags += ",";
-            }
-
             if (item_tags.Length != 0)
             {
                 int index = item_tags.LastIndexOf(',');
@@ -613,8 +629,77 @@ namespace ClipboardManager
             return item_tags;
         }
 
+        private string get_clip_source()
+        {
+            string source_app = "";
+            string source_string = "";
+
+            source_app = GetActiveWindowExecutableName();
+
+            if (!string.IsNullOrEmpty(source_app))
+            {
+                source_string += " Source: ";
+                source_string += source_app;
+            }
+
+            return source_string;
+        }
+
         private void save_history(string path_to_save)
         {
+            //var mstream = new MemoryStream();
+            XmlWriterSettings oSettings = new XmlWriterSettings();
+
+            oSettings.Indent = true;
+            oSettings.OmitXmlDeclaration = true;
+            oSettings.Encoding = Encoding.UTF8;
+            oSettings.CheckCharacters = false;
+
+            var writer = XmlWriter.Create(path_to_save, oSettings);
+
+            var new_list = ClipboardManager_History.Keys.ToList();
+
+            using (writer)
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("xml");
+
+                foreach (var key in new_list)
+                {
+                    if (ClipboardManager_History[key] == "" || ClipboardManager_History[key].Length == 0)
+                    {
+                        continue;
+                    }
+
+                    writer.WriteStartElement("item");
+
+                    writer.WriteStartElement("content");
+                    writer.WriteValue(ClipboardManager_History[key]);//.Replace(@"<", @"&lt;").Replace(@">", @"&gt;")
+                    writer.WriteEndElement();
+
+                    if (Tags_Array.ContainsKey(key))
+                    {
+                        Tags_Array[key].Trim();
+                        Tags_Array[key] = Tags_Array[key].Replace("\n", "");
+
+                        writer.WriteStartElement("tags");
+                        writer.WriteValue(Tags_Array[key]);//.Replace(@"<", @"&lt;").Replace(@">", @"&gt;")
+                        writer.WriteEndElement();
+                    }
+
+                    writer.WriteEndElement(); // item
+                }
+                writer.WriteEndElement(); // xml
+                writer.WriteEndDocument();
+                writer.Flush();
+
+                writer.Close();
+
+            }
+
+            //doc.Save(path_to_save);
+
+            /*
             StreamWriter writer = new StreamWriter(path_to_save, false, System.Text.Encoding.UTF8);
             var new_list = ClipboardManager_History.Keys.ToList();
             //new_list.Sort();
@@ -642,7 +727,7 @@ namespace ClipboardManager
                 writer.WriteLine();
             }
             writer.Close();
-
+            */
         }
 
         /*
@@ -740,7 +825,18 @@ namespace ClipboardManager
             foreach (int item in list_clipboard.SelectedIndices)
             {
                 ClipboardManager_History[ClipboardManager_Index_ListBox[item]] = "";
+
+                if (Tags_Array.ContainsKey(ClipboardManager_Index_ListBox[item]))
+                {
+                    Tags_Array[ClipboardManager_Index_ListBox[item]] = "";
+                }
             }
+
+            save_history(ClipboardManager_DAT);
+            ClipboardManager_History.Clear();
+            Tags_Array.Clear();
+
+            load_buffer_history(ClipboardManager_DAT);
 
             list_clipboard_reload();
             reload_tray();
@@ -772,6 +868,8 @@ namespace ClipboardManager
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            save_fd.Filter = "XML files|*.xml";
+
             if (save_fd.ShowDialog() == DialogResult.Cancel)
             {
                 return;
@@ -779,7 +877,7 @@ namespace ClipboardManager
 
             try
             {
-                save_history(save_fd.FileName + ".xml");                
+                save_history(save_fd.FileName);                
             }
             catch (System.Exception ex)
             {
@@ -806,19 +904,10 @@ namespace ClipboardManager
             list_clipboard_reload();
         }
 
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ClipboardManager_History.Clear();
-            Tags_Array.Clear();
-
-            reload_tray();
-
-            list_clipboard_reload();
-
-        }
-
         private void toolStripMenuSaveSelection_Click(object sender, EventArgs e)
         {
+            save_fd.Filter = "TXT files|*.txt";
+
             if (list_clipboard.SelectedIndices.Count == 0)
             {
                 return;
@@ -844,5 +933,34 @@ namespace ClipboardManager
                 MessageBox.Show("Save File Error", "Error");
             }
         }
+
+        private void StripMenuGlueSelected_Click(object sender, EventArgs e)
+        {
+            string glued_items = "";
+            StringBuilder sb = new StringBuilder();
+
+            foreach (int item in list_clipboard.SelectedIndices)
+            {
+                sb.Append(ClipboardManager_History[ClipboardManager_Index_ListBox[item]]);
+                sb.Append(Environment.NewLine);
+                sb.Append(Environment.NewLine);
+            }
+
+            glued_items = sb.ToString();
+            ClipboardManager_History.Add(ClipboardManager_History.Count, glued_items.Replace(@"&lt;", @"<").Replace(@"&gt;", @">"));
+
+            save_history(ClipboardManager_DAT);
+            ClipboardManager_History.Clear();
+            Tags_Array.Clear();
+
+            load_buffer_history(ClipboardManager_DAT);
+
+            list_clipboard_reload();
+
+            list_clipboard.SelectedIndex = 0;
+
+            reload_tray();            
+        }
+
     }
 }

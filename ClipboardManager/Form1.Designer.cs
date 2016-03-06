@@ -40,16 +40,13 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuSaveSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.open_fd = new System.Windows.Forms.OpenFileDialog();
             this.save_fd = new System.Windows.Forms.SaveFileDialog();
             this.textBoxItemContent = new System.Windows.Forms.TextBox();
-            this.toolStripMenuSaveSelection = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.StripMenuGlueSelected = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.size_tray)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -119,10 +116,7 @@
             this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.toolStripMenuSaveSelection,
-            this.toolStripSeparator2,
-            this.reloadToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.clearToolStripMenuItem,
+            this.StripMenuGlueSelected,
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -140,22 +134,11 @@
             resources.ApplyResources(this.saveToolStripMenuItem, "saveToolStripMenuItem");
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
-            // reloadToolStripMenuItem
+            // toolStripMenuSaveSelection
             // 
-            this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            resources.ApplyResources(this.reloadToolStripMenuItem, "reloadToolStripMenuItem");
-            this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
-            // 
-            // clearToolStripMenuItem
-            // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            resources.ApplyResources(this.clearToolStripMenuItem, "clearToolStripMenuItem");
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            this.toolStripMenuSaveSelection.Name = "toolStripMenuSaveSelection";
+            resources.ApplyResources(this.toolStripMenuSaveSelection, "toolStripMenuSaveSelection");
+            this.toolStripMenuSaveSelection.Click += new System.EventHandler(this.toolStripMenuSaveSelection_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -172,17 +155,13 @@
             // 
             resources.ApplyResources(this.textBoxItemContent, "textBoxItemContent");
             this.textBoxItemContent.Name = "textBoxItemContent";
+            this.textBoxItemContent.ReadOnly = true;
             // 
-            // toolStripMenuSaveSelection
+            // StripMenuGlueSelected
             // 
-            this.toolStripMenuSaveSelection.Name = "toolStripMenuSaveSelection";
-            resources.ApplyResources(this.toolStripMenuSaveSelection, "toolStripMenuSaveSelection");
-            this.toolStripMenuSaveSelection.Click += new System.EventHandler(this.toolStripMenuSaveSelection_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
+            this.StripMenuGlueSelected.Name = "StripMenuGlueSelected";
+            resources.ApplyResources(this.StripMenuGlueSelected, "StripMenuGlueSelected");
+            this.StripMenuGlueSelected.Click += new System.EventHandler(this.StripMenuGlueSelected_Click);
             // 
             // ClipboardManager
             // 
@@ -217,16 +196,13 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog open_fd;
         private System.Windows.Forms.SaveFileDialog save_fd;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.TextBox textBoxItemContent;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuSaveSelection;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem StripMenuGlueSelected;
     }
 }
 
